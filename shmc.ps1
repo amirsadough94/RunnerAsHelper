@@ -47,9 +47,10 @@ runas /user:"$User"  /savecred "$Target" $Arguments
     Set-Content -LiteralPath $BatPath -Value $Content -Encoding ASCII
     #backup old one
     if(StoreBackup){
-    $BackupName = [IO.Path]::GetFileNameWithoutExtension($ShortcutPath) + ".bk.lnk"
-    Rename-Item -LiteralPath $ShortcutPath -NewName $BackupName
-    }
+        $BackupName = [IO.Path]::GetFileNameWithoutExtension($ShortcutPath) + ".bk.lnk"
+        Rename-Item -LiteralPath $ShortcutPath -NewName $BackupName
+    }else{
+        Remove-Item -LiteralPath $ShortcutPath -Force}
 
     # Create desktop shortcut
     $ShortcutName = [IO.Path]::GetFileNameWithoutExtension($ShortcutPath)
