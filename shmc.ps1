@@ -45,20 +45,21 @@ runas /user:"$User"  /savecred "$Target" $Arguments
 "@
 
     Set-Content -LiteralPath $BatPath -Value $Content -Encoding ASCII
-    #backup old one
-    if(StoreBackup){
-        $BackupName = [IO.Path]::GetFileNameWithoutExtension($ShortcutPath) + ".bk.lnk"
-        Rename-Item -LiteralPath $ShortcutPath -NewName $BackupName
-    }else{
-        Remove-Item -LiteralPath $ShortcutPath -Force}
 
-    # Create desktop shortcut
     $ShortcutName = [IO.Path]::GetFileNameWithoutExtension($ShortcutPath)
     $Desktop = [Environment]::GetFolderPath("Desktop")
     $DesktopShortcutPath = Join-Path $Desktop "$ShortcutName.lnk"
+    
+    #rename old one
+    $BackupName = [IO.Path]::GetFileNameWithoutExtension($ShortcutPath) + ".bk.lnk"
+    Rename-Item -LiteralPath $ShortcutPath -NewName $BackupName
 
+    if(!StoreBackup){
+        Remove-Item -LiteralPath $BackupName -Force}
+        
+    # Create desktop shortcut
     $NewShortcut = $Shell.CreateShortcut($DesktopShortcutPath)
-    $NewShortcut.TargetPath = $BatP،ath
+    $NewShortcut.TargetPath = $BatPath
     $NewShortcut.WorkingDirectory = $GameDirectory
     $NewShortcut.IconLocation = "$Target,0"
     $NewShortcut.Save()
